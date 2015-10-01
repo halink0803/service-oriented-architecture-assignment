@@ -33,6 +33,7 @@
   "devDependencies": {
     "electron-packager": "^5.0.0",
     "electron-prebuilt": "^0.31.1",
+    "request": "^2.64.0",
     "xo": "^0.7.1"
   },
   "xo": {
