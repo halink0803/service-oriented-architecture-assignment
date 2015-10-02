@@ -1,0 +1,49 @@
+{
+  "name": "s-o-a-book-lib",
+  "productName": "SOABookLib",
+  "version": "0.0.0",
+  "description": "My shining app",
+  "license": "MIT",
+  "repository": "halink0803/s-o-a-book-lib",
+  "author": {
+    "name": "halink0803",
+    "email": "halink0803@gmail.com",
+    "url": "halink0803.github.io"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "xo",
+    "start": "electron .",
+    "build": "electron-packager . $npm_package_productName --out=dist --ignore='^/dist$' --prune --asar --all --version=0.31.1"
+  },
+  "files": [
+    "index.js",
+    "index.html",
+    "index.css"
+  ],
+  "keywords": [
+    "electron-app"
+  ],
+  "dependencies": {
+    "electron-debug": "^0.1.1",
+    "material-design-lite": "^1.0.4"
+  },
+  "devDependencies": {
+    "electron-packager": "^5.0.0",
+    "electron-prebuilt": "^0.31.1",
+    "request": "^2.64.0",
+    "xo": "^0.7.1"
+  },
+  "xo": {
+    "esnext": true,
+    "envs": [
+      "node",
+      "browser"
+    ],
+    "rules": {
+      "prefer-arrow-callback": 0
+    }
+  }
+}

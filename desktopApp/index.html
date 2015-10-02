@@ -12,7 +12,7 @@
 		<link rel="stylesheet" href="index.css">		
 	</head>
 	<body>
-		<div class="container">
+		<div class="container" ng-app="bookList" ng-controller="bookListController">
 			<header>
 				<h1>SOA Book Library Management</h1>
 			</header>
@@ -22,12 +22,10 @@
 						<h5>Book categories</h5>
 						<ul>
 							<li class="active">All</li>
-							<li>Fiction</li>
-							<li>Non Fiction</li>
-							<li>Science</li>
+							<li ng-repeat="category in categories.listCategory">{{ category.field }}</li>							
 						</ul>
 					</div>
-					<div class="book-list mdl-cell mdl-cell--9-col" ng-app="bookList" ng-controller="bookListController">
+					<div class="book-list mdl-cell mdl-cell--9-col">
 						<div class="mdl-layout mdl-js-layout mdl-color--grey-100">
 							<main class="mdl-layout__content">
 								<div class="mdl-grid">
@@ -48,7 +46,7 @@
 											<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Read More</a>
 											<div class="mdl-layout-spacer"></div>
 											<button class="mdl-button mdl-button--icon mdl-button--colored"><i class="material-icons">favorite</i></button>
-											<button class="mdl-button mdl-button--icon mdl-button--colored"><i class="material-icons">share</i></button>
+											<button class="mdl-button mdl-button--icon mdl-button--colored" class="edit"><i class="material-icons">mode_edit</i></button>
 										</div>
 									</div>
 
@@ -62,11 +60,11 @@
 				</button>
 				
 				<!--Login to upload books - not require -->				
-				<div id="form-login-wrapper" class="form-login-wrapper">
+				<div id="form-login-wrapper" class="form-login-wrapper skip">
 					<header>
-						<h2 id="login-message">Login as a teacher to manage library</h2>
+						<h2 id="login-message" class="skip">Login as a teacher to manage library</h2>
 					</header>
-					<form action="#" id="login-form" class="login-form mdl-shadow--2dp">					
+					<form action="#" id="login-form" class="login-form mdl-shadow--2dp skip">					
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
 						  	<input class="mdl-textfield__input" type="text" id="username" />
 							<label class="mdl-textfield__label" for="username">User Name</label>					
@@ -79,10 +77,11 @@
 						  Login
 						</button>
 						<button id="button-skip" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-						  Skip
+						  Cancel
 						</button>
 					</form>
 				</div>
+				<!-- Upload form -->
 				<div id="book-upload-wrapper"class="main mdl-grid">
 					<h2 id="add_new_book">Add a new book</h2>		
 					<form action="#" id="upload_book" class="">											
@@ -117,10 +116,49 @@
 						<button id="cancel-add-book" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
 						  CANCEL
 						</button>
-					</form>				
+					</form>								
 				</div>
-			</section>
 
+
+				<!-- edit form -->
+				<div id="book-upload-wrapper"class="main mdl-grid">
+					<h2 id="add_new_book">Add a new book</h2>		
+					<form action="#" id="upload_book" class="">											
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
+						  	<input class="mdl-textfield__input" type="text" id="bookname" />
+							<label class="mdl-textfield__label" for="username">Book Name</label>					
+					  	</div>
+					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
+						  	<input class="mdl-textfield__input" type="text" id="bookcategory" />
+							<label class="mdl-textfield__label" for="username">Book Category</label>					
+					  	</div>
+					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
+						  	<input class="mdl-textfield__input" type="text" id="book_author" />
+							<label class="mdl-textfield__label" for="username">Book Author</label>					
+					  	</div>
+					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
+						  	<input class="mdl-textfield__input" type="text" id="book_year" />
+							<label class="mdl-textfield__label" for="username">Book Published Year</label>					
+					  	</div>
+					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
+						  	<input class="mdl-textfield__input" type="text" id="book_code" />
+							<label class="mdl-textfield__label" for="username">Book Code</label>					
+					  	</div>
+					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
+						  	<input class="mdl-textfield__input" type="file" id="book_cover" />
+							<!-- <label class="mdl-textfield__label" for="username">Book Cover</label>				 -->
+					  	</div>
+					  	<!-- Raised button with ripple -->
+						<button id="add-book" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+						  Update
+						</button>
+						<button id="cancel-add-book" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+						  CANCEL
+						</button>
+					</form>								
+				</div>
+
+			</section>		
 			<footer></footer>
 		</div>
 		<script src="main.js"></script>
