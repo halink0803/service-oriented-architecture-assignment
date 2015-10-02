@@ -2,8 +2,11 @@ var bookList = 	angular.module('bookList', []);
 
 bookList.controller('bookListController', function($scope, $http) {
 	delete $http.defaults.headers.common['X-Requested-With'];
-	$http.get("http://resful.esy.es/admin/books")
-    .success(function(response) {$scope.bookList = response;});
+	$http.get("http://resful.esy.es/books")
+    .success(function(response) {
+    	console.log(response);
+    	$scope.bookList = response;
+    });    
 })
 
 function login() {
