@@ -136,9 +136,24 @@ h2#login-message.skip {
 	width: 100%;
 }
 
+.book-list .detail {
+	position: fixed;
+	top: 10px;
+	left: 10px;
+	z-index: 999;
+}
+
+.book-list .list {
+	display: none;
+}
+
 button.add-new-book {
 	position: fixed;
 	right: 10px;
 	bottom: 10px;
 	z-index: 99;
+}
+
+footer {
+	text-align: center;
 }

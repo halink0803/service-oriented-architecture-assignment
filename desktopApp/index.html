@@ -5,7 +5,8 @@
 		<title>SOA Book Library</title>
 		<link rel="stylesheet" href="node_modules/material-design-lite/dist/material.min.css">
 		<link rel="stylesheet" href="css/font-awesome.min.css">
-		<script src="node_modules/material-design-lite/dist/material.min.js"></script>
+		<script>window.$ = window.jQuery = require('jquery');</script>
+		<script src="node_modules/material-design-lite/dist/material.min.js"></script>		
 		<script src="js/angular.min.js"></script>
 		<script src="js/require.min.js"></script>
 		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">		
@@ -22,13 +23,17 @@
 						<h5>Book categories</h5>
 						<ul>
 							<li class="active">All</li>
-							<li ng-repeat="category in categories.listCategory">{{ category.field }}</li>							
+							<!-- MDL Spinner Component -->
+							<div class="mdl-spinner mdl-js-spinner is-active"></div>
+							<li ng-repeat="category in categories.listCategory">{{ category.field }}</li>	
 						</ul>
 					</div>
 					<div class="book-list mdl-cell mdl-cell--9-col">
-						<div class="mdl-layout mdl-js-layout mdl-color--grey-100">
-							<main class="mdl-layout__content">
+						<div class="mdl-color--grey-100">
+							<main class="">
 								<div class="mdl-grid">
+									<!-- MDL Spinner Component -->
+									<div class="mdl-spinner mdl-js-spinner is-active"></div>
 									<div class="mdl-card mdl-cell mdl-cell--3-col mdl-shadow--2dp" ng-repeat="book in bookList.books">
 										<figure class="mdl-card__media">
 											<img ng-src="http://resful.esy.es/upload/books/{{ book.image }}" alt="" />
@@ -36,20 +41,23 @@
 										<div class="mdl-card__title">
 											<h1 class="mdl-card__title-text">{{ book.name }}</h1>
 										</div>
-										<div class="mdl-card__supporting-text">
+										<div class="mdl-card__supporting-text list">
 											<ul>
-												<li>ISBN: {{ book.code }}</li>
-												<li>Author: {{ book.athor }}</li>
+												<li class="book-category" data-value="{{ book.field }}">Category: {{ book.field }}</li>
+												<li class="book-code">ISBN: {{ book.code }}</li>
+												<li class="book-author">Author: {{ book.author }}</li>
+												<li class="book-publisher">Publisher: {{ book.publisher }}</li>
+												<li class="book-year">Year: {{ book.publish_year }}</li>
+												<li class="book-pages">Pages: {{ book.pages }}</li>
 											</ul>
 										</div>
 										<div class="mdl-card__actions mdl-card--border">
 											<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Read More</a>
 											<div class="mdl-layout-spacer"></div>
 											<button class="mdl-button mdl-button--icon mdl-button--colored"><i class="material-icons">favorite</i></button>
-											<button class="mdl-button mdl-button--icon mdl-button--colored" class="edit"><i class="material-icons">mode_edit</i></button>
+											<button class="mdl-button mdl-button--icon mdl-button--colored" id="button_edit"><i class="material-icons">mode_edit</i></button>
 										</div>
 									</div>
-
 								</div>
 							</main>
 						</div>			
@@ -81,6 +89,7 @@
 						</button>
 					</form>
 				</div>
+				
 				<!-- Upload form -->
 				<div id="book-upload-wrapper"class="main mdl-grid">
 					<h2 id="add_new_book">Add a new book</h2>		
@@ -122,7 +131,7 @@
 
 				<!-- edit form -->
 				<div id="book-upload-wrapper"class="main mdl-grid">
-					<h2 id="add_new_book">Add a new book</h2>		
+					<h2 id="add_new_book">Edit Book Infomation</h2>		
 					<form action="#" id="upload_book" class="">											
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
 						  	<input class="mdl-textfield__input" type="text" id="bookname" />

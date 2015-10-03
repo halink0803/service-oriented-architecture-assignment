@@ -19,6 +19,7 @@ function createMainWindow() {
 	});
 
 	win.loadUrl(`file://${__dirname}/index.html`);
+	win.openDevTools();
 	win.on('closed', onClosed);
 
 	return win;

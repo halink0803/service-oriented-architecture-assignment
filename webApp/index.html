@@ -3,11 +3,11 @@
 	<head>
 		<meta charset="utf-8">
 		<title>SOA Book Library</title>
-		<link rel="stylesheet" href="node_modules/material-design-lite/dist/material.min.css">
+		<link rel="stylesheet" href="css/material.min.css">
 		<link rel="stylesheet" href="css/font-awesome.min.css">
-		<script src="node_modules/material-design-lite/dist/material.min.js"></script>
-		<script src="js/angular.min.js"></script>
-		<script src="js/require.min.js"></script>
+		<script src="js/jquery-1.11.3.min.js"></script>
+		<script src="js/material.min.js"></script>
+		<script src="js/angular.min.js"></script>		
 		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">		
 		<link rel="stylesheet" href="index.css">		
 	</head>
@@ -21,13 +21,18 @@
 					<div class="category mdl-cell mdl-cell--3-col">
 						<h5>Book categories</h5>
 						<ul>
-							<li class="active">All</li>
-							<li ng-repeat="category in categories.listCategory">{{ category.field }}</li>							
+							<li class="active" ng-click="category_click($event)">All</li>
+							<!-- MDL Spinner Component -->
+							<div class="mdl-spinner mdl-js-spinner is-active"></div>
+							<li ng-click="category_click($event)" ng-repeat="category in categories.listCategory">{{ category.field }}</li>
 						</ul>
 					</div>
-					<div class="book-list mdl-cell mdl-cell--9-col">
-						<div class="mdl-layout mdl-js-layout mdl-color--grey-100">
-							<main class="mdl-layout__content">
+					<div class="book-list mdl-cell mdl-cell--9-col">						
+
+						<div class="mdl-color--grey-100">
+							<!-- MDL Spinner Component -->
+							<div class="mdl-spinner mdl-js-spinner is-active"></div>
+							<main class="">
 								<div class="mdl-grid">
 									<div class="mdl-card mdl-cell mdl-cell--3-col mdl-shadow--2dp" ng-repeat="book in bookList.books">
 										<figure class="mdl-card__media">
@@ -36,10 +41,14 @@
 										<div class="mdl-card__title">
 											<h1 class="mdl-card__title-text">{{ book.name }}</h1>
 										</div>
-										<div class="mdl-card__supporting-text">
+										<div class="mdl-card__supporting-text list">
 											<ul>
-												<li>ISBN: {{ book.code }}</li>
-												<li>Author: {{ book.athor }}</li>
+												<li class="book-category" data-value="{{ book.field }}">Category: {{ book.field }}</li>
+												<li class="book-code">ISBN: {{ book.code }}</li>
+												<li class="book-author">Author: {{ book.author }}</li>
+												<li class="book-publisher">Publisher: {{ book.publisher }}</li>
+												<li class="book-year">Year: {{ book.publish_year }}</li>
+												<li class="book-pages">Pages: {{ book.pages }}</li>
 											</ul>
 										</div>
 										<div class="mdl-card__actions mdl-card--border">
@@ -54,17 +63,14 @@
 							</main>
 						</div>			
 					</div>		
-				</div>
-				<button id="add-book-form" class="add-new-book mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-				  <i class="material-icons">add</i>
-				</button>
+				</div>				
 				
 				<!--Login to upload books - not require -->				
-				<div id="form-login-wrapper" class="form-login-wrapper">
+				<div id="form-login-wrapper" class="form-login-wrapper skip">
 					<header>
-						<h2 id="login-message">Login as a teacher to manage library</h2>
+						<h2 id="login-message" class="skip">Login as a teacher to manage library</h2>
 					</header>
-					<form action="#" id="login-form" class="login-form mdl-shadow--2dp">					
+					<form action="#" id="login-form" class="login-form mdl-shadow--2dp skip">					
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
 						  	<input class="mdl-textfield__input" type="text" id="username" />
 							<label class="mdl-textfield__label" for="username">User Name</label>					
@@ -80,46 +86,14 @@
 						  Cancel
 						</button>
 					</form>
-				</div>
-				<div id="book-upload-wrapper"class="main mdl-grid">
-					<h2 id="add_new_book">Add a new book</h2>		
-					<form action="#" id="upload_book" class="">											
-						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="text" id="bookname" />
-							<label class="mdl-textfield__label" for="username">Book Name</label>					
-					  	</div>
-					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="text" id="bookcategory" />
-							<label class="mdl-textfield__label" for="username">Book Category</label>					
-					  	</div>
-					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="text" id="book_author" />
-							<label class="mdl-textfield__label" for="username">Book Author</label>					
-					  	</div>
-					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="text" id="book_year" />
-							<label class="mdl-textfield__label" for="username">Book Published Year</label>					
-					  	</div>
-					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="text" id="book_code" />
-							<label class="mdl-textfield__label" for="username">Book Code</label>					
-					  	</div>
-					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="file" id="book_cover" />
-							<!-- <label class="mdl-textfield__label" for="username">Book Cover</label>				 -->
-					  	</div>
-					  	<!-- Raised button with ripple -->
-						<button id="add-book" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-						  ADD
-						</button>
-						<button id="cancel-add-book" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-						  CANCEL
-						</button>
-					</form>				
-				</div>
+				</div>				
 			</section>
 
-			<footer></footer>
+			<footer>
+				<div>
+					<p>Service Oriented Architecture Assignment Project</p>
+				</div>
+			</footer>
 		</div>
 		<script src="main.js"></script>
 	</body>
