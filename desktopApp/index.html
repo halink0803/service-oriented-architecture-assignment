@@ -16,16 +16,19 @@
 		<div class="container" ng-app="bookList" ng-controller="bookListController">
 			<header>
 				<h1>SOA Book Library Management</h1>
+				<buton ng-click="addLoginForm($event)"class="button-login mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+					Login
+				</buton>
 			</header>
 			<section class="main">				
 				<div class="main mdl-grid">		
 					<div class="category mdl-cell mdl-cell--3-col">
 						<h5>Book categories</h5>
 						<ul>
-							<li class="active">All</li>
+							<li ng-click="category_click($event)"class="active">All</li>
 							<!-- MDL Spinner Component -->
-							<div class="mdl-spinner mdl-js-spinner is-active"></div>
-							<li ng-repeat="category in categories.listCategory">{{ category.field }}</li>	
+							<!-- <div class="mdl-spinner mdl-js-spinner is-active"></div> -->
+							<li ng-click="category_click($event)" ng-repeat="category in categories.listCategory">{{ category.field }}</li>	
 						</ul>
 					</div>
 					<div class="book-list mdl-cell mdl-cell--9-col">
@@ -33,10 +36,10 @@
 							<main class="">
 								<div class="mdl-grid">
 									<!-- MDL Spinner Component -->
-									<div class="mdl-spinner mdl-js-spinner is-active"></div>
+									<!-- <div class="mdl-spinner mdl-js-spinner is-active"></div> -->
 									<div class="mdl-card mdl-cell mdl-cell--3-col mdl-shadow--2dp" ng-repeat="book in bookList.books">
 										<figure class="mdl-card__media">
-											<img ng-src="http://resful.esy.es/upload/books/{{ book.image }}" alt="" />
+											<img ng-src="http://restful-soa.esy.es/upload/books/{{ book.image }}" alt="" />
 										</figure>
 										<div class="mdl-card__title">
 											<h1 class="mdl-card__title-text">{{ book.name }}</h1>
@@ -51,11 +54,9 @@
 												<li class="book-pages">Pages: {{ book.pages }}</li>
 											</ul>
 										</div>
-										<div class="mdl-card__actions mdl-card--border">
-											<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Read More</a>
-											<div class="mdl-layout-spacer"></div>
-											<button class="mdl-button mdl-button--icon mdl-button--colored"><i class="material-icons">favorite</i></button>
-											<button class="mdl-button mdl-button--icon mdl-button--colored" id="button_edit"><i class="material-icons">mode_edit</i></button>
+										<div class="mdl-card__actions">
+											<a id="read_more" ng-click="readmore_click($event)" index="{{ $index }}" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Read More</a>
+											<div class="mdl-layout-spacer"></div>											
 										</div>
 									</div>
 								</div>
@@ -72,16 +73,16 @@
 					<header>
 						<h2 id="login-message" class="skip">Login as a teacher to manage library</h2>
 					</header>
-					<form action="#" id="login-form" class="login-form mdl-shadow--2dp skip">					
+					<form id="login-form" class="login-form mdl-shadow--2dp skip">					
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="text" id="username" />
-							<label class="mdl-textfield__label" for="username">User Name</label>					
+						  	<input class="mdl-textfield__input" type="text" id="username" ng-model="user.email"/>
+							<label class="mdl-textfield__label" for="email">User Email</label>					
 					  	</div>
 					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="password" id="password" />
+						  	<input class="mdl-textfield__input" type="password" id="password" ng-model="user.password" />
 							<label class="mdl-textfield__label" for="password">Password</label>					
 					  	</div>
-						<button id="button-login" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+						<button ng-click="login($event)" id="button-login" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
 						  Login
 						</button>
 						<button id="button-skip" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
@@ -93,83 +94,121 @@
 				<!-- Upload form -->
 				<div id="book-upload-wrapper"class="main mdl-grid">
 					<h2 id="add_new_book">Add a new book</h2>		
-					<form action="#" id="upload_book" class="">											
+					<form id="upload_book" class="mdl-shadow--2dp">											
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="text" id="bookname" />
-							<label class="mdl-textfield__label" for="username">Book Name</label>					
+						  	<input class="mdl-textfield__input" type="text" id="bookname" ng-model="newBook.name" name="name" />
+								<label class="mdl-textfield__label" for="username">Book Name</label>					
 					  	</div>
 					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="text" id="bookcategory" />
-							<label class="mdl-textfield__label" for="username">Book Category</label>					
+						  	<input class="mdl-textfield__input" type="text" id="bookcategory" name="field" ng-model="newBook.field" />
+								<label class="mdl-textfield__label" for="username">Book Category</label>					
 					  	</div>
 					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="text" id="book_author" />
-							<label class="mdl-textfield__label" for="username">Book Author</label>					
+						  	<input class="mdl-textfield__input" type="text" id="bookcategory" name="field" ng-model="newBook.description" />
+								<label class="mdl-textfield__label" for="username">Book Description</label>					
 					  	</div>
 					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="text" id="book_year" />
-							<label class="mdl-textfield__label" for="username">Book Published Year</label>					
+						  	<input class="mdl-textfield__input" type="text" id="book_author" name="author" ng-model="newBook.author"/>
+								<label class="mdl-textfield__label" for="username">Book Author</label>					
+					  	</div>
+					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+						  	<input class="mdl-textfield__input" type="text" id="book_publisher" name="publisher" ng-model="newBook.publisher"/>
+								<label class="mdl-textfield__label" for="username">Book Publisher</label>					
 					  	</div>
 					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="text" id="book_code" />
-							<label class="mdl-textfield__label" for="username">Book Code</label>					
+						  	<input class="mdl-textfield__input" type="text" id="book_year" name="year" ng-model="newBook.year"/>
+								<label class="mdl-textfield__label" for="username">Book Published Year</label>					
 					  	</div>
 					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="file" id="book_cover" />
+						  	<input class="mdl-textfield__input" type="number" id="book_pages" name="pages" ng-model="newBook.pages"/>
+								<label class="mdl-textfield__label" for="username">Book Pages</label>					
+					  	</div>
+					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
+						  	<input class="mdl-textfield__input" type="text" id="book_code" name="code" ng-model="newBook.code"/>
+								<label class="mdl-textfield__label" for="username">Book ISBN Code</label>					
+					  	</div>
+					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
+						  	<input class="mdl-textfield__input" type="file" id="book_cover" name="image" fileread="newBook.image"/>
 							<!-- <label class="mdl-textfield__label" for="username">Book Cover</label>				 -->
 					  	</div>
 					  	<!-- Raised button with ripple -->
-						<button id="add-book" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+						<button type="submit" ng-click="addNewBook($event)" id="add-book" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
 						  ADD
-						</button>
+						</button>						
+					</form>		
 						<button id="cancel-add-book" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
 						  CANCEL
-						</button>
-					</form>								
+						</button>						
 				</div>
 
 
 				<!-- edit form -->
-				<div id="book-upload-wrapper"class="main mdl-grid">
-					<h2 id="add_new_book">Edit Book Infomation</h2>		
-					<form action="#" id="upload_book" class="">											
-						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="text" id="bookname" />
-							<label class="mdl-textfield__label" for="username">Book Name</label>					
-					  	</div>
-					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="text" id="bookcategory" />
-							<label class="mdl-textfield__label" for="username">Book Category</label>					
-					  	</div>
-					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="text" id="book_author" />
-							<label class="mdl-textfield__label" for="username">Book Author</label>					
-					  	</div>
-					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="text" id="book_year" />
-							<label class="mdl-textfield__label" for="username">Book Published Year</label>					
-					  	</div>
-					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="text" id="book_code" />
-							<label class="mdl-textfield__label" for="username">Book Code</label>					
-					  	</div>
-					  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">					
-						  	<input class="mdl-textfield__input" type="file" id="book_cover" />
-							<!-- <label class="mdl-textfield__label" for="username">Book Cover</label>				 -->
-					  	</div>
-					  	<!-- Raised button with ripple -->
-						<button id="add-book" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-						  Update
-						</button>
-						<button id="cancel-add-book" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-						  CANCEL
-						</button>
-					</form>								
-				</div>
+				<section class="book_detail_section">  
+			    <header>
+			      <div class="book_title">
+			        <h2>{{ book_detail.name }}</h2>
+			      </div>
+			    </header>
+			    <section class="book_detail">
+			      <div class="book_cover">
+			        <img ng-src="http://restful-soa.esy.es/upload/books/{{ book_detail.image }}" alt="" >
+			      </div>
+			      <div class="book_detail_content">
+			        <h4>Book Description</h4>        
+			        <p>{{ book_detail.description }}</p>
+			        <h4>Book Detail</h4>			        
+			        <form id="edit_book" class="mdl-shadow--2dp">
+			            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">          
+			                <input class="mdl-textfield__input" type="text" id="bookname" name="name" ng-model="book_detail.name" />
+			              <label class="mdl-textfield__label" for="username">Book Name</label>          
+			              </div>
+			              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">          
+			                <input class="mdl-textfield__input" type="text" id="bookcategory" name="field" ng-model="book_detail.field" />
+			              <label class="mdl-textfield__label" for="username">Book Category</label>          
+			              </div>
+			              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">          
+			                <input class="mdl-textfield__input" type="text" id="book_author" name="author" ng-model="book_detail.author" />
+			              <label class="mdl-textfield__label" for="username">Book Author</label>          
+			              </div>
+			              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">          
+			                <input class="mdl-textfield__input" type="text" id="book_publisher" name="publisher" ng-model="book_detail.publisher" />
+			              <label class="mdl-textfield__label" for="username">Book Publisher</label>         
+			              </div>
+			              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">          
+			                <input class="mdl-textfield__input" type="text" id="book_year" name="year" ng-model="book_detail.publish_year"/>
+			              <label class="mdl-textfield__label" for="username">Book Published Year</label>          
+			              </div>
+			              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">          
+			                <input class="mdl-textfield__input" type="text" id="book_pages" name="pages" ng-model="book_detail.pages"/>
+			              <label class="mdl-textfield__label" for="username">Book Pages</label>         
+			              </div>
+			              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">          
+			                <input class="mdl-textfield__input" type="text" id="book_code" name="code" ng-model="book_detail.code" />
+			              <label class="mdl-textfield__label" for="username">ISBN</label>          
+			              </div>
+			              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">          
+			                <input class="mdl-textfield__input" type="file" id="book_cover" name="image" ng-model="book_detail.image" />
+			              <!-- <label class="mdl-textfield__label" for="username">Book Cover</label>         -->
+			              </div>
+			              <!-- Raised button with ripple -->
+			            <button ng-click="updateABook($event)"type="submit" index="{{ book_detail.id }}" id="update-book" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+			              Update
+			            </button>           
+			          </form>
+			          	<button ng-click="close($event)" index="{{book_detail.id}}" id="delete-book" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+			              BACK
+			            </button>			          
+			          	<button ng-click="deleteABook($event)" index="{{book_detail.id}}" id="delete-book" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+			              Delete this book
+			            </button>           			          
+			      </div>
+			    </section>			    
+			  </section>
 
 			</section>		
 			<footer></footer>
 		</div>
 		<script src="main.js"></script>
+		<script src="main_app.js"></script>
 	</body>
 </html>

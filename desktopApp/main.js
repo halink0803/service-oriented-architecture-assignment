@@ -1,17 +1,48 @@
 var bookList = 	angular.module('bookList', []);
+var remote = require('remote');
+var ipc = require('ipc');
 
 bookList.controller('bookListController', function($scope, $http) {
+  $scope.bookList = {
+    books :[{
+      name: 'Service Oriented Architecture',
+      year: '2015',
+      field: 'programming',
+      author: 'Ha Link',
+      code: '2012',
+      publisher: 'UET',
+      image: '',
+      pages: '2015'
+    }]
+  }
 	delete $http.defaults.headers.common['X-Requested-With'];
-	$http.get("http://resful.esy.es/listCategories")
+	$http.get("http://restful-soa.esy.es/listCategories")
     .success(function(response) {  
       jQuery('.category .mdl-spinner').css('display', 'none');    
     	$scope.categories = response;
     });
-	$http.get("http://resful.esy.es/books")
+  delete $http.defaults.headers.common['X-Requested-With'];
+	$http.get("http://restful-soa.esy.es/books")
     .success(function(response) {
       jQuery('.book-list .mdl-spinner').css('display', 'none');    	
     	$scope.bookList = response;
     });
+  $scope.book_detail = $scope.bookList.books[0];
+  $scope.newBook = {
+                      name: '',
+                      description: '',
+                      year: '',
+                      field: '',
+                      author: '',
+                      code: '',
+                      publisher: '',
+                      image: '',
+                      pages: ''
+                    }
+  $scope.user = {
+                email: '',
+                password: ''
+  }                    
   $scope.category_click = function( $event ) {
                 jQuery('.category .active').removeClass('active');
                 if( !jQuery($event.currentTarget).hasClass('active') ){
@@ -28,169 +59,103 @@ bookList.controller('bookListController', function($scope, $http) {
                     jQuery(this).parent().parent().parent().css('display', 'block');
                   }
                 })
-              }      
-})
-
-function login() {
-
-}
-
-function loadMainContent() {
-	document.getElementById('login-form').setAttribute("class", "skip");
-	document.getElementById('login-message').setAttribute("class", "skip");
-	document.getElementById('form-login-wrapper').setAttribute("class", "skip");
-}
-
-function add_book_form() {
-	document.getElementById('upload_book').setAttribute("class", "active");
-	document.getElementById('book-upload-wrapper').setAttribute("class", "active");
-}
-
-function cancel_add_book() {
-	document.getElementById('upload_book').removeAttribute("class", "active");
-	document.getElementById('book-upload-wrapper').removeAttribute("class", "active");
-}
-
-function add_book() {
-	
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById("button-login").addEventListener("click", login);
-  document.getElementById("button-skip").addEventListener("click", loadMainContent);
-  document.getElementById("add-book-form").addEventListener("click", add_book_form);
-  document.getElementById("add-book").addEventListener("click", add_book);
-  document.getElementById("cancel-add-book").addEventListener("click", cancel_add_book);
+              };                            
+  $scope.readmore_click = function ($event) {
+                          var index = jQuery($event.currentTarget).attr('index');    
+                          $scope.book_detail = $scope.bookList.books[index];                          
+                          jQuery('.book_detail_section').addClass('active');
+                          // ipc.send('show-book-detail');
+                        }  
+  $scope.addNewBook = function($event) {
+                          $event.preventDefault();                          
+                          $http({
+                            method: 'POST',
+                            url: 'http://restful-soa.esy.es/books',
+                            data: $scope.newBook                            
+                          }).success(function(data){                            
+                            var notifier = {
+                                title: "Upload a book",
+                                body: data.message
+                            }
+                            new Notification("Upload a book", notifier);
+                          });                          
+                        }
+  $scope.deleteABook = function($event) {
+                          $event.preventDefault();
+                          $http({
+                            method: 'DELETE',
+                            url: 'http://restful-soa.esy.es/books/' + jQuery($event.currentTarget).attr('index'),
+                            data: $scope.newBook                            
+                          }).success(function(data){                            
+                            var notifier = {
+                                title: "Delete book",
+                                body: data.message
+                            }
+                            new Notification("Delete book", notifier);
+                            jQuery('.book_detail_section').removeClass('active');
+                          });
+                      } 
+  $scope.updateABook = function($event) {
+                          $event.preventDefault();
+                          $http({
+                            method: 'PUT',
+                            url: 'http://restful-soa.esy.es/books/' + jQuery($event.currentTarget).attr('index'),
+                            data: $scope.book_detail                            
+                          }).success(function(data){                            
+                            var notifier = {
+                                title: "Update book information",
+                                body: data.message
+                            }
+                            new Notification("Update book information", notifier);
+                            jQuery('.book_detail_section').removeClass('active');
+                          });
+                      }
+  $scope.close = function($event) {
+                          $event.preventDefault();
+                          jQuery('.book_detail_section').removeClass('active');
+                      }
+  $scope.addLoginForm = function($event){
+                          $event.preventDefault();
+                          jQuery('#form-login-wrapper').removeClass('skip');
+                          jQuery('#login-form').removeClass('skip');
+                        }
+  $scope.login = function($event){
+                        $event.preventDefault();
+                          $http({
+                            method: 'POST',
+                            url: 'http://restful-soa.esy.es/auth/login',
+                            data: $scope.user                            
+                          }).success(function(data){                            
+                            var notifier = {
+                                title: "Login",
+                                body: data.message
+                            }
+                            new Notification("login", notifier);
+                            jQuery('#form-login-wrapper').addClass('skip');
+                            jQuery('#login-form').addClass('skip');
+                          });
+                        }                        
 });
-
-var remote = require('remote');
-var Menu = remote.require('menu');
-var MenuItem = remote.require('menu-item');
-var template = [
-  {
-    label: 'Edit',
-    submenu: [
-      {
-        label: 'Undo',
-        accelerator: 'CmdOrCtrl+Z',
-        role: 'undo'
-      },      
-    ]
-  },
-  {
-    label: 'View',
-    submenu: [
-      {
-        label: 'Reload',
-        accelerator: 'CmdOrCtrl+R',
-        click: function(item, focusedWindow) {
-          if (focusedWindow)
-            focusedWindow.reload();
+bookList.directive("fileread", [function () {
+    return {
+        scope: {
+            fileread: "="
+        },
+        link: function (scope, element, attributes) {
+            element.bind("change", function (changeEvent) {
+                var reader = new FileReader();
+                reader.onload = function (loadEvent) {
+                    scope.$apply(function () {
+                        scope.fileread = loadEvent.target.result;
+                    });
+                }
+                reader.readAsDataURL(changeEvent.target.files[0]);
+            });
         }
-      },
-      {
-        label: 'Toggle Full Screen',
-        accelerator: (function() {
-          if (process.platform == 'darwin')
-            return 'Ctrl+Command+F';
-          else
-            return 'F11';
-        })(),
-        click: function(item, focusedWindow) {
-          if (focusedWindow)
-            focusedWindow.setFullScreen(!focusedWindow.isFullScreen());
-        }
-      },
-      {
-        label: 'Toggle Developer Tools',
-        accelerator: (function() {
-          if (process.platform == 'darwin')
-            return 'Alt+Command+I';
-          else
-            return 'Ctrl+Shift+I';
-        })(),
-        click: function(item, focusedWindow) {
-          if (focusedWindow)
-            focusedWindow.toggleDevTools();
-        }
-      },
-    ]
-  },
-  {
-    label: 'Window',
-    role: 'window',
-    submenu: [
-      {
-        label: 'Minimize',
-        accelerator: 'CmdOrCtrl+M',
-        role: 'minimize'
-      },
-      {
-        label: 'Close',
-        accelerator: 'CmdOrCtrl+W',
-        role: 'close'
-      },
-    ]
-  },
-  {
-    label: 'Help',
-    role: 'help',
-    submenu: [
-      {
-        label: 'Learn More',
-        click: function() { require('shell').openExternal('http://electron.atom.io') }
-      },
-    ]
-  },
-];
-
-if (process.platform == 'darwin') {
-  var name = remote.require('app').getName();
-  template.unshift({
-    label: name,
-    submenu: [
-      {
-        label: 'About ' + name,
-        role: 'about'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Hide ' + name,
-        accelerator: 'Command+H',
-        role: 'hide'
-      },
-      {
-        label: 'Hide Others',
-        accelerator: 'Command+Shift+H',
-        role: 'hideothers'
-      },
-      {
-        label: 'Show All',
-        role: 'unhide'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Quit',
-        accelerator: 'Command+Q',
-        click: function() { app.quit(); }
-      },
-    ]
-  });
-  // Window menu.
-  template[3].submenu.push(
-    {
-      type: 'separator'
-    },
-    {
-      label: 'Bring All to Front',
-      role: 'front'
     }
-  );
-}
-
-menu = Menu.buildFromTemplate(template);
-Menu.setApplicationMenu(menu);
+}]);
+// bookList.filter('to_trusted', ['$sce', function($sce){
+//           return function(text) {
+//               return $sce.trustAsHtml(text);
+//           };
+//       }]);

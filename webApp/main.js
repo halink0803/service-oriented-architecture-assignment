@@ -2,12 +2,13 @@ var bookList = 	angular.module('bookList', []);
 
 bookList.controller('bookListController', function($scope, $http) {
 	delete $http.defaults.headers.common['X-Requested-With'];
-	$http.get("http://resful.esy.es/listCategories")
+	$http.get("http://restful-soa.esy.es/listCategories")
     .success(function(response) {    	    	
         jQuery('.category .mdl-spinner').css('display', 'none');
     	$scope.categories = response;
     });
-	$http.get("http://resful.esy.es/books")
+    delete $http.defaults.headers.common['X-Requested-With'];
+	$http.get("http://restful-soa.esy.es/books")
     .success(function(response) {
         jQuery('.book-list .mdl-spinner').css('display', 'none');
     	$scope.bookList = response;
