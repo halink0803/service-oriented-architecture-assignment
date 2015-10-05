@@ -199,7 +199,8 @@ button.add-new-book {
 
 .book_detail_content {
 	display: inline-block;
-	width: 70%;	
+	width: 70%;
+	overflow: auto;
 }
 
 #update-book {
