@@ -1,7 +1,3 @@
-function login() {
-
-}
-
 function loadMainContent() {
   document.getElementById('login-form').setAttribute("class", "skip");
   document.getElementById('login-message').setAttribute("class", "skip");

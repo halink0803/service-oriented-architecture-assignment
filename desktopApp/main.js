@@ -98,7 +98,7 @@ bookList.controller('bookListController', function($scope, $http) {
   $scope.updateABook = function($event) {
                           $event.preventDefault();
                           $http({
-                            method: 'PUT',
+                            method: 'PATCH',
                             url: 'http://restful-soa.esy.es/books/' + jQuery($event.currentTarget).attr('index'),
                             data: $scope.book_detail                            
                           }).success(function(data){                            

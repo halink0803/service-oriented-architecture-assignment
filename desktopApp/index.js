@@ -7,7 +7,7 @@ var ipc = require('ipc');
 require('crash-reporter').start();
 
 // adds debug features like hotkeys for triggering dev tools and reload
-require('electron-debug')();
+// require('electron-debug')();
 
 // prevent window being GC'd
 let mainWindow;
@@ -20,8 +20,8 @@ function createMainWindow() {
 	});
 
 	win.loadUrl(`file://${__dirname}/index.html`);
+	// window.openDevTools();
 	win.maximize();
-	win.openDevTools();	
 	win.on('closed', onClosed);
 
 	return win;
@@ -55,7 +55,7 @@ app.on('ready', function () {
 			resizable: true
 		});
 	book_detail_window.loadUrl(`file://${__dirname}/book_detail.html`);
-	book_detail_window.openDevTools();
+	// book_detail_window.openDevTools();
 	ipc.on('show-book-detail', function(){
 		book_detail_window.show();
 	})
